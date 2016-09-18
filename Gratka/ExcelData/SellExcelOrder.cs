@@ -39,7 +39,8 @@ namespace Gratka.ExcelData
                 new AdvertProperty("StanLazienki","Stan łazienki",30),
                 new AdvertProperty("Kredyt","Kredyt",31),
                 new AdvertProperty("UsytuowanieWzglStronSwiata","Usytuowanie wzgl. stron świata",32),
-                new AdvertProperty("Wykonczenie","Wykończenie",33)
+                new AdvertProperty("Wykonczenie","Wykończenie",33),
+                new AdvertProperty("Nazwa ulicy", "Nazwa ulicy", 34)
             };
         }
     }
