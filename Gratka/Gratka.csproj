@@ -66,6 +66,10 @@
     <Compile Include="ParseToAdvert.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Search\AdvertType.cs" />
+    <Compile Include="Search\ConstructURL.cs" />
+    <Compile Include="Search\MarketType.cs" />
+    <Compile Include="Search\SearchProperties.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
