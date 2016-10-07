@@ -66,9 +66,16 @@
     <Compile Include="ParseToAdvert.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Search\AdvertType.cs" />
+    <Compile Include="Search\SearchEnum\AddedBy.cs" />
+    <Compile Include="Search\SearchEnum\BuildingYear.cs" />
+    <Compile Include="Search\SearchEnum\AdvertType.cs" />
     <Compile Include="Search\ConstructURL.cs" />
-    <Compile Include="Search\MarketType.cs" />
+    <Compile Include="Search\SearchEnum\CreationDate.cs" />
+    <Compile Include="Search\SearchEnum\ExtraArea.cs" />
+    <Compile Include="Search\SearchEnum\Floors.cs" />
+    <Compile Include="Search\SearchEnum\FloorsInBuilding.cs" />
+    <Compile Include="Search\SearchEnum\MarketType.cs" />
+    <Compile Include="Search\SearchEnum\Rooms.cs" />
     <Compile Include="Search\SearchProperties.cs" />
   </ItemGroup>
   <ItemGroup>
