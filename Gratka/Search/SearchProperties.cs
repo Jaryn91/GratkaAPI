@@ -28,11 +28,15 @@ namespace Gratka.Search
         public BuildingYear BuildingYearTo { get; set; }
         public List<ExtraArea> ExtraAreas { get; set; }
         public CreationDate CreationDate { get; set; }
-        public AddedBy AddedBy { get; set; }
+        public List<AddedBy> AddedBy { get; set; }
+        public string County { get; set; }
+        public string City { get; set; }
+        public string District { get; set; }
 
         public SearchProperties()
         {
             ExtraAreas = new List<ExtraArea>();
+            AddedBy = new List<AddedBy>();
         }
     }
 }

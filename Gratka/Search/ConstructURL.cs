@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Gratka.Extension;
 using Gratka.Search.SearchEnum;
 using Microsoft.Office.Interop.Excel;
 
 namespace Gratka.Search
 {
-    public class ConstructURL
+    public class ConstructUrl
     {
-        private SearchProperties _searchProperties;
-        private StringBuilder _values;
-        private StringBuilder _keys;
-        private StringBuilder _link;
-        public ConstructURL(SearchProperties searchProperties)
+        private readonly SearchProperties _searchProperties;
+        private readonly StringBuilder _values;
+        private readonly StringBuilder _keys;
+        private readonly StringBuilder _link;
+        public ConstructUrl(SearchProperties searchProperties)
         {
             _searchProperties = searchProperties;
             _link = new StringBuilder();
@@ -26,22 +27,22 @@ namespace Gratka.Search
         {
             Domain();
             AdvertType();           
-            Locatlization();
+            Localization();
             Price();
             CreateDate();
             PriceForMeter();
             Area();
+            AddedBy();           
             Room();
             FloorInBulding();
             Floor();            
-            ExtraAreas();
+            ExtraAreas();           
             BuildingYear();
             
             ConcatePropertiesToURL();
 
             return _link.ToString();
         }
-
 
         private void Domain()
         {
@@ -84,20 +85,62 @@ namespace Gratka.Search
             }
         }
 
-        private void Locatlization()
+        private void Localization()
         {
-            _link.Append(_searchProperties.Localization);
+            if (_searchProperties.Localization != null)
+            {
+                LocalizationContainsOnlyCountyAndCity();
+                LocalizationContainsCountyCityDistrict();
+            }
+            else
+            {
+                var sb = new StringBuilder();
+                sb.Append(",");
+                sb.Append(_searchProperties.County);
+                AddCommaToLocalizationString(sb, _searchProperties.City);
+                sb.Append(_searchProperties.City);
+                AddCommaToLocalizationString(sb, _searchProperties.District);
+                sb.Append(_searchProperties.District);
+                sb.Replace(" ", "_");
+
+                AddDataToURL(sb.ToString(), "lok");
+            }
+        }
+
+        private void LocalizationContainsCountyCityDistrict()
+        {
+            if (_searchProperties.Localization.Count(x => x == ',') == 2)
+            {
+                var localization = _searchProperties.Localization.RemovePolishLetters().ToLower().Replace(", ", ",").Replace(" ","_");
+                _values.Append(localization);
+                _keys.Append(",dz");
+            }
+        }
+
+        private void LocalizationContainsOnlyCountyAndCity()
+        {
+            if (_searchProperties.Localization.Count(x => x == ',') == 1)
+            {
+                var localization = _searchProperties.Localization.RemovePolishLetters().ToLower().Replace(" ", "");
+                _values.Append(localization);
+            }
+        }
+
+        private void AddCommaToLocalizationString(StringBuilder sb, string nextProperty)
+        {
+            if (sb.Length > 1 && nextProperty != null)
+                sb.Append("%5E_");
         }
 
         private void Price()
         {
             if (_searchProperties.PriceFrom != 0)
             {
-                AddDateToURL(_searchProperties.PriceFrom, "co");
+                AddDataToURL(_searchProperties.PriceFrom, "co");
             }
             if (_searchProperties.PriceTo != 0)
             {
-                AddDateToURL(_searchProperties.PriceTo, "cd");
+                AddDataToURL(_searchProperties.PriceTo, "cd");
             }
         }
 
@@ -105,11 +148,11 @@ namespace Gratka.Search
         {
             if (_searchProperties.PriceForMeterFrom != 0)
             {
-                AddDateToURL(_searchProperties.PriceForMeterFrom, "cmo");
+                AddDataToURL(_searchProperties.PriceForMeterFrom, "cmo");
             }
             if (_searchProperties.PriceForMeterTo != 0)
             {
-                AddDateToURL(_searchProperties.PriceForMeterTo, "cmd");
+                AddDataToURL(_searchProperties.PriceForMeterTo, "cmd");
             }
         }
 
@@ -117,11 +160,11 @@ namespace Gratka.Search
         {
             if (_searchProperties.AreaFrom != 0)
             {
-                AddDateToURL(_searchProperties.AreaFrom, "mo");
+                AddDataToURL(_searchProperties.AreaFrom, "mo");
             }
             if (_searchProperties.AreaTo != 0)
             {
-                AddDateToURL(_searchProperties.AreaTo, "md");
+                AddDataToURL(_searchProperties.AreaTo, "md");
             }
         }
 
@@ -129,11 +172,11 @@ namespace Gratka.Search
         {
             if ((int)_searchProperties.RoomsFrom != 0)
             {
-                AddDateToURL((int)_searchProperties.RoomsFrom, "lpo");
+                AddDataToURL((int)_searchProperties.RoomsFrom, "lpo");
             }
             if ((int)_searchProperties.RoomsTo != 0)
             {
-                AddDateToURL((int)_searchProperties.RoomsTo, "lpd");
+                AddDataToURL((int)_searchProperties.RoomsTo, "lpd");
             }
         }
 
@@ -141,11 +184,11 @@ namespace Gratka.Search
         {
             if ((int)_searchProperties.FloorsFrom != 0)
             {
-                AddDateToURL((int)_searchProperties.FloorsFrom, "po");
+                AddDataToURL((int)_searchProperties.FloorsFrom, "po");
             }
             if ((int)_searchProperties.FloorsTo != 0)
             {
-                AddDateToURL((int)_searchProperties.FloorsTo, "pd");
+                AddDataToURL((int)_searchProperties.FloorsTo, "pd");
             }
         }
 
@@ -153,11 +196,11 @@ namespace Gratka.Search
         {
             if ((int)_searchProperties.FloorsInBuildingFrom != 0)
             {
-                AddDateToURL((int)_searchProperties.FloorsInBuildingFrom, "lo");
+                AddDataToURL((int)_searchProperties.FloorsInBuildingFrom, "lo");
             }
             if ((int)_searchProperties.FloorsInBuildingTo != 0)
             {
-                AddDateToURL((int)_searchProperties.FloorsInBuildingTo, "ld");
+                AddDataToURL((int)_searchProperties.FloorsInBuildingTo, "ld");
             }
         }
 
@@ -165,11 +208,11 @@ namespace Gratka.Search
         {
             if ((int)_searchProperties.BuildingYearFrom != 0)
             {
-                AddDateToURL((int)_searchProperties.BuildingYearFrom, "rbo");
+                AddDataToURL((int)_searchProperties.BuildingYearFrom, "rbo");
             }
             if ((int)_searchProperties.BuildingYearTo != 0)
             {
-                AddDateToURL((int)_searchProperties.BuildingYearTo, "rbd");
+                AddDataToURL((int)_searchProperties.BuildingYearTo, "rbd");
             }
         }
 
@@ -180,7 +223,20 @@ namespace Gratka.Search
                 var valuesOfArea = _searchProperties.ExtraAreas.Select(v => (int) v).ToList();
                 valuesOfArea.Sort();
                 var values = string.Join("_", valuesOfArea);
-                AddDateToURL(values, "pod");
+                AddDataToURL(values, "pod");
+            }
+        }
+
+        private void AddedBy()
+        {
+            if (_searchProperties.AddedBy.Count != 0)
+            {
+                var addedByList = _searchProperties.AddedBy.OrderBy(v => v.GetOrder()).ToList();
+                foreach (var addedBy in addedByList)
+                {
+                    AddDataToURL("on", addedBy.ToString());
+                }
+
             }
         }
 
@@ -188,13 +244,12 @@ namespace Gratka.Search
         {
             if (_searchProperties.CreationDate != null)
             {
-
-                AddDateToURL(_searchProperties.CreationDate.ToString(), "od");
+                AddDataToURL(_searchProperties.CreationDate.ToString(), "od");
             }
         }
 
 
-        private void AddDateToURL(int value, string keyName)
+        private void AddDataToURL(int value, string keyName)
         {
             _values.Append(",");
             _values.Append(value);
@@ -202,7 +257,7 @@ namespace Gratka.Search
             _keys.Append(keyName);
         }
 
-        private void AddDateToURL(string value, string keyName)
+        private void AddDataToURL(string value, string keyName)
         {
             _values.Append(",");
             _values.Append(value);

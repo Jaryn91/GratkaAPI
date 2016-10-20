@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExcelData\RentExcelOrder.cs" />
+    <Compile Include="Extension\StringExtension.cs" />
     <Compile Include="ExtraProp\ContainsNameOfStreet.cs" />
     <Compile Include="ExtraProp\TwoSidesFlat.cs" />
     <Compile Include="Advert.cs" />
